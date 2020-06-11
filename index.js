@@ -2,14 +2,14 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 client.once('ready', () => {
-	console.log('Ready!');
+    console.log('Ready!');
 });
 
-client.on('message', message => { 
+client.on('message', message => {
 
-    if(message.content === '!salve'){
+    if (message.content === '!salve') {
 
-        message.channel.send('felps e dina');
+        message.channel.send('dina e felps');
 
     }
 
