@@ -4,7 +4,7 @@ export default
 
 {
 
-    "api_key": "RGAPI-46a16d95-ccce-4ced-985e-77a9215813de",
+    "api_key": "RGAPI-68df4373-6c49-48f8-8a64-03e1c2af176a",
     "bot_key": "NzIwNzYwNDczNjAzMDE0Nzk5.XuKq1A.jJRAUKl35lMUu24DTC-aFdGKnkA"
 
 }
