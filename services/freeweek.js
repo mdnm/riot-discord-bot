@@ -1,4 +1,5 @@
-const axios = require('axios');
+import axios from 'axios';
+import config from './config.js';
 
 const brApi = axios.create({
     baseURL: 'https://br1.api.riotgames.com/lol/platform/v3',
@@ -9,9 +10,9 @@ const ddragonApi = axios.create({
 });
 
 //function start
-const returnMessage = async () => {
+export default async () => {
 
-const freeWeekResponse = await brApi.get('/champion-rotations?api_key=RGAPI-46a16d95-ccce-4ced-985e-77a9215813de');
+const freeWeekResponse = await brApi.get('/champion-rotations?api_key=' + config.api_key);
 const championsResponse = await ddragonApi.get();
 
 const freeWeek = freeWeekResponse.data;
@@ -41,5 +42,3 @@ freeWeekChampions.forEach(champion => {
 return message;
 
 }
-
-module.exports = { returnMessage };

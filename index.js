@@ -1,26 +1,40 @@
-const Discord = require('discord.js');
-const axios = require('axios');
-const freeweekService = require('./services/freeweek');
+import Discord from 'discord.js';
+import config from './services/config.js';
+import freeweekService from './services/freeweek.js';
 
 const client = new Discord.Client();
 
 
-client.once('ready', () => {
+client.once('ready', async () => {
+
     console.log( 'Ready!' );
+
+
 });
 
 client.on('message', async message => {
 
     if (message.content === '!salve') {
+
         message.channel.send('dina e felps');
     }
 
     if (message.content === '!freeweek') {
         
-        const returnMessages = await freeweekService.returnMessage();
-        returnMessages.split('|').forEach(returnMessage => message.channel.send( returnMessage ) );
+
+        try{
+
+            const returnMessages = await freeweekService();
+            returnMessages.split('|').forEach(returnMessage => message.channel.send( returnMessage ) );
+    
+        }catch(err){
+    
+            console.log('unexpected error');
+    
+        }
 
     }
+    
 });
 
-client.login('NzIwNzYwNDczNjAzMDE0Nzk5.XuKq1A.jJRAUKl35lMUu24DTC-aFdGKnkA');
+client.login(config.bot_key);

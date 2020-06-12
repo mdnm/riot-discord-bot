@@ -8,5 +8,6 @@
   "main": "index.js",
   "repository": "https://github.com/mdnm/riot-discord-bot.git",
   "author": "Felipe S <snowychest@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module"
 }
