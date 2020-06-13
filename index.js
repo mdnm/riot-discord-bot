@@ -4,7 +4,7 @@ import freeweekService from './services/freeweek.js';
 import userinfo from './services/profile.js';
 
 //global vars
-const regionsArray = ['br1', 'eun1', 'euw1', 'na1', 'jp1', 'kr', 'la1', 'la2', 'na1', 'oc1', 'ru', 'tr1'];
+const regionsArray = ['br1', 'eun1', 'euw1', 'jp1', 'kr', 'la1', 'la2', 'na1', 'oc1', 'ru', 'tr1'];
 
 //global objects
 const client = new Discord.Client();
@@ -14,94 +14,146 @@ client.once('ready', async () => {
 
     console.log('Ready!');
 
-});
+});//end of the client.once function
 
 client.on('message', async message => {
 
+    //splitting the message in many sections so we can have acces to the command
     let messageSplit = message.content.split(' ');
-    let comando = messageSplit[0];
 
-    console.log(comando);
-
-    const getArgs = ([comando, ...args]) => args;
+    //splitting the bot command from the arguments
+    const getArgs = ([a, ...b]) => ({comando:a, args:b});
 
     /*
      *  List of the bot commands
      *  The prefix can be edited through the config.js file
      */
-    
 
     if(message.content[0] == config.prefix){
 
-        switch( comando ){
+        switch( getArgs(messageSplit).comando ){
 
         case '!salve':
 
             message.channel.send('dina e felps');
-            return;
+            return; //end of !salve
 
         case '!freeweek':
-
-            console.log('iai');
 
             try {
 
                 const returnMessages = await freeweekService();
                 returnMessages.split('|').forEach(returnMessage => message.channel.send(returnMessage));
 
-                console.log('teste');
-
             } catch (err) {
 
                 console.log(err);
 
-            }//end of try/catch
-
-            return;
+            }
+            return; //end of !freeweek
 
         case '!profile':
+            
+            //splitting arguments so we can have access to the region
+            let argumentsSplit = getArgs(messageSplit).args;
 
-            let nick = getArgs(messageSplit).join(' ');
+            const profileCommandArguments = ([a, ...b]) => ({region:a, nick:b});
+            let nick = profileCommandArguments(argumentsSplit).nick.join(' ');
+            let region = profileCommandArguments(argumentsSplit).region;
 
-            try {
+            //comparing the region sent by the user with our local array with all the regions available
+            const regionCheck = regionsArray.find( item => item == region );
+            
+            //if our response for regionCheck is undefined then an error will happen, handling this
+            if(regionCheck != undefined){
+                
+                try {
 
-                const user = await userinfo(nick);
-                console.log(user);
+                    const user = await userinfo(region, nick);
+                    console.log(user);
+                    
+                    //League API returns a really ugly name for ranked queues so here we give it a friendly mask
 
-                const embedUser = new MessageEmbed()
-                .setTitle(`Perfil de ${user.name}`)
-                .setThumbnail(user.avatarURL)
-                .setColor('#FF0000')
-                .setDescription(
+                    const leagueTypeTranslation = (leagueType) => {
 
-                    `Summoner Level: ${user.summonerLevel} \n
-                    Solo/Duo Queue Tier: ${user['1'].tier} ${user['1'].rank}
-                    Winrate: ${ (user['1'].wins / ( user['1'].wins + user['1'].losses) * 100).toFixed(2) }%  \n
-                    Flex Queue Tier:  ${user['0'].tier} ${user['0'].rank}
-                    Winrate: ${ (user['0'].wins / ( user['0'].wins + user['0'].losses) * 100).toFixed(2) }%  \n`
+                        switch(leagueType){
 
-                )
+                            case 'RANKED_SOLO_5x5':
+                                return 'Solo/Duo Queue';
 
-                message.channel.send(embedUser);
+                            case 'RANKED_FLEX_SR':
+                                return 'Flex 5x5 Queue';
 
-            } catch (err) {
+                            default: 
+                                return '';
 
-                console.log(err);
-                message.channel.send('Ocorreu um erro.');
+                        }
 
-            }//end of try/catch
+                     } //end of leagueTypeTranslation
+                    
+                    //function used to check the player's ranked leagues
 
-            return;
+                    const checkLeague = (league) => {
+                    
+                        if(league != undefined){
+
+                            return  (`${leagueTypeTranslation(league.queueType)}: ${league.tier} ${league.rank} \n` +
+                                     `Winrate: ${ (league.wins / ( league.wins + league.losses) * 100).toFixed(2) }%  \n\n`);
+    
+                        }else{
+
+                            return '';
+
+                        }
+    
+                    } //end of checkLeague
+                    
+                    //Using a find function to make League API easier to deal with, as they return different objects that vary
+                    let infoSoloDuo = user.leagueInfo.find(item => item.queueType == 'RANKED_SOLO_5x5')
+                    let infoFlex = user.leagueInfo.find(item => item.queueType == 'RANKED_FLEX_SR')
+
+
+                    //Final description that goes to Discord's Embed
+                    let summonerDescription = `Summoner Level: ${user.summonerLevel} \n\n` + 
+                                              checkLeague(infoSoloDuo) +
+                                              checkLeague(infoFlex);
+
+
+                    //setting up discord embed message
+                    const embedUser = new MessageEmbed()
+                    .setTitle(`Perfil de ${user.name}`)
+                    .setThumbnail(user.avatarURL)
+                    .setColor('#FF0000')
+                    .setDescription(summonerDescription)
+
+                    message.channel.send(embedUser);
+
+                } catch (err) {
+
+                    console.log(err);
+                    message.channel.send('Ocorreu um erro.');
+
+                }
+
+            } else {
+                
+                message.channel.send(`Região inválida, verifique se a sintaxe está correta \n` + 
+                                     `${config.prefix}profile [região] [nome do invocador] \n` +
+                                     `regiões disponíveis: ${regionsArray.join(', ')}`);
+            
+            }//end of region check
+
+            return; //end of !profile
 
         default:
 
             message.channel.send('Comando desconhecido.');
             return;
 
-        }
+        }   //end of switch()
 
-    }
+    }   //end of prefix checking condition
 
-});
+}); //end of the client.on('message') function
 
 client.login(config.bot_key);
