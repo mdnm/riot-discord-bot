@@ -1,7 +1,7 @@
 import Discord, {MessageEmbed} from 'discord.js';
 import config from './services/config.js';
 import freeweekService from './services/freeweek.js';
-import userinfo from './services/profile.js';
+import userinfo, {checkLeague} from './services/profile.js';
 
 //global vars
 const regionsArray = ['br1', 'eun1', 'euw1', 'jp1', 'kr', 'la1', 'la2', 'na1', 'oc1', 'ru', 'tr1'];
@@ -33,12 +33,12 @@ client.on('message', async message => {
 
         switch( getArgs(messageSplit).comando ){
 
-        case '!salve':
+        case config.prefix + 'salve':
 
             message.channel.send('dina e felps');
             return; //end of !salve
 
-        case '!freeweek':
+        case config.prefix + 'freeweek':
 
             try {
 
@@ -52,7 +52,7 @@ client.on('message', async message => {
             }
             return; //end of !freeweek
 
-        case '!profile':
+        case config.prefix + 'profile':
             
             //splitting arguments so we can have access to the region
             let argumentsSplit = getArgs(messageSplit).args;
@@ -72,42 +72,6 @@ client.on('message', async message => {
                     const user = await userinfo(region, nick);
                     console.log(user);
                     
-                    //League API returns a really ugly name for ranked queues so here we give it a friendly mask
-
-                    const leagueTypeTranslation = (leagueType) => {
-
-                        switch(leagueType){
-
-                            case 'RANKED_SOLO_5x5':
-                                return 'Solo/Duo Queue';
-
-                            case 'RANKED_FLEX_SR':
-                                return 'Flex 5x5 Queue';
-
-                            default: 
-                                return '';
-
-                        }
-
-                     } //end of leagueTypeTranslation
-                    
-                    //function used to check the player's ranked leagues
-
-                    const checkLeague = (league) => {
-                    
-                        if(league != undefined){
-
-                            return  (`${leagueTypeTranslation(league.queueType)}: ${league.tier} ${league.rank} \n` +
-                                     `Winrate: ${ (league.wins / ( league.wins + league.losses) * 100).toFixed(2) }%  \n\n`);
-    
-                        }else{
-
-                            return '';
-
-                        }
-    
-                    } //end of checkLeague
-                    
                     //Using a find function to make League API easier to deal with, as they return different objects that vary
                     let infoSoloDuo = user.leagueInfo.find(item => item.queueType == 'RANKED_SOLO_5x5')
                     let infoFlex = user.leagueInfo.find(item => item.queueType == 'RANKED_FLEX_SR')
@@ -117,7 +81,6 @@ client.on('message', async message => {
                     let summonerDescription = `Summoner Level: ${user.summonerLevel} \n\n` + 
                                               checkLeague(infoSoloDuo) +
                                               checkLeague(infoFlex);
-
 
                     //setting up discord embed message
                     const embedUser = new MessageEmbed()

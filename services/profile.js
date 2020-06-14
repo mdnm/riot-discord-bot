@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from './config.js';
 
-//function start
+ // The default function is used to return api requests regarding the user
+
 export default async (region, username) => {
 
     const regionApi = axios.create({
@@ -23,4 +24,36 @@ export default async (region, username) => {
 
     return allInfo;
 
-}
+} //end of default function
+
+const leagueTypeTranslation = (leagueType) => {
+
+    switch(leagueType){
+
+        case 'RANKED_SOLO_5x5':
+            return 'Solo/Duo Queue';
+
+        case 'RANKED_FLEX_SR':
+            return 'Flex 5x5 Queue';
+
+        default: 
+            return '';
+
+    }
+
+} //end of leagueTypeTranslation
+
+export const checkLeague = (league) => {
+
+    if(league != undefined){
+
+        return  (`${leagueTypeTranslation(league.queueType)}: ${league.tier} ${league.rank} \n` +
+                 `Winrate: ${ (league.wins / ( league.wins + league.losses) * 100).toFixed(2) }%  \n\n`);
+
+    }else{
+
+        return '';
+
+    }
+
+} //end of checkLeague
