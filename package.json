@@ -1,8 +1,16 @@
 {
+<<<<<<< HEAD
+=======
+  "dependencies": {
+    "axios": "^0.19.2",
+    "discord.js": "^12.2.0"
+  },
+>>>>>>> bb9e793e88a5763644d3396a013383ff2c97d63f
   "name": "riot-discord-bot",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/mdnm/riot-discord-bot.git",
+<<<<<<< HEAD
   "author": "Mateus de Nardo <mateusdnm@hotmail.com>",
   "license": "MIT",
   "scripts": {
@@ -35,3 +43,9 @@
     "babel-plugin-module-resolver": "^4.0.0"
   }
 }
+=======
+  "author": "Felipe S <snowychest@gmail.com>",
+  "license": "MIT",
+  "type": "module"
+}
+>>>>>>> bb9e793e88a5763644d3396a013383ff2c97d63f
