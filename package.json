@@ -1,11 +1,16 @@
 {
-  "dependencies": {
-    "discord.js": "^12.2.0"
-  },
   "name": "riot-discord-bot",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/mdnm/riot-discord-bot.git",
-  "author": "Felipe S <snowychest@gmail.com>",
-  "license": "MIT"
+  "author": "Mateus de Nardo <mateusdnm@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules src/Client.ts"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.49",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.9.5"
+  }
 }

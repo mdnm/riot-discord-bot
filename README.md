@@ -1,1 +1,1 @@
-Discord bot
+Discord bot that integrates with the RiotGames Public API
