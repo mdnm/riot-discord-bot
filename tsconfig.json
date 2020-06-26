@@ -2,9 +2,14 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "importHelpers": true,
     "lib": [
-      "ES6"
+      "es2017",
+      "esnext.asynciterable"
     ],
+    "moduleResolution": "node",
     "allowJs": true,
     "outDir": "./dist",
     "rootDir": "./src",
