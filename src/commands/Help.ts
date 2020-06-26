@@ -1,5 +1,7 @@
 import { Command, CommandMessage, Description, Client } from '@typeit/discord'
 
+import * as Config from '../config/config.json'
+
 export abstract class Help {
   @Command('help')
   @Description('Show all commands')
@@ -7,7 +9,7 @@ export abstract class Help {
     let commands = '```ini'
 
     Client.getCommands().forEach(command => {
-      commands += `\n![${command.commandName}]: \n#${command.description}`
+      commands += `\n${Config.prefix}[${command.commandName}]: \n#${command.description}`
     })
 
     commands += '```'

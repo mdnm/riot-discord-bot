@@ -2,7 +2,9 @@ import * as Path from 'path'
 
 import { Discord, CommandNotFound, CommandMessage } from '@typeit/discord'
 
-@Discord('!', {
+import * as Config from '../config/config.json'
+
+@Discord(Config.prefix, {
   import: [
     Path.join(__dirname, '..', 'commands', '*.ts')
   ]
