@@ -62,7 +62,9 @@
         "class-methods-use-this": "off",
         "import/extensions": [
             "error",
-            "never"
+            {
+                "json": "always"
+            }
         ],
         "import-helpers/order-imports": [
             "warn",
@@ -91,8 +93,13 @@
     },
     "settings": {
         "import/resolver": {
-            "typescript": {
-                "directory": "packages/server/*/tsconfig.json"
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
             }
         }
     }

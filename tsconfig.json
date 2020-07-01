@@ -25,11 +25,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "paths": {
-      "@config": [
-        "./src/config/*"
-      ]
-    }
   },
   "include": [
     "src/**/*"

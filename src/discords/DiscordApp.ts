@@ -12,6 +12,6 @@ import * as Config from '../config/config.json'
 export abstract class AppDiscord {
   @CommandNotFound()
   private notFound(message: CommandMessage) {
-    message.reply('Command not found, try !help')
+    message.reply(`Command not found, try ${Config.prefix}help`)
   }
 }
